@@ -5,3 +5,4 @@ App\Entity\User:
     password: '<word()>'
     firstName: '<firstName()>'
     lastName: '<lastName()>'
+    createdAt: '<dateTimeBetween("-1000days", "now")>'

@@ -8,5 +8,3 @@ App\Entity\Product:
     categories: '<numberBetween(1,5)>x @category*'
     isActif: '<numberBetween(0,1)>'
 
-
-
