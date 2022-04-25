@@ -1,0 +1,4 @@
+App\Entity\City:
+  city{1..45}:
+    code_postal: '<numberBetween(1400,98799)>'
+    name: '<city()>'

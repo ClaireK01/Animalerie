@@ -1,0 +1,61 @@
+App\Entity\Category:
+  category0: 
+    label: 'Chien'
+  category1:
+    label: 'Chat'
+  category2: 
+    label: 'Oiseaux'
+  category3: 
+    label: 'Reptile'
+  category4: 
+    label: 'Basscourt'
+  category5: 
+    label: 'Rongeur'
+  category6: 
+    label: 'Aquatique'
+  
+  category7: 
+    label: 'Nourriture pour Chien'
+    categoryParent: '@category0'
+  category8: 
+    label: 'Nourriture pour Chat'
+    categoryParent: '@category1'
+  category9: 
+    label: 'Nourriture pour Reptile'
+    categoryParent: '@category3'
+  category10: 
+    label: 'Nourriture pour Oiseaux'
+    categoryParent: '@category2'
+  category11: 
+    label: 'Nourriture pour Rongeur'
+    categoryParent: '@category5'
+  category12: 
+    label: 'Nourriture pour Poisson'
+    categoryParent: '@category6'
+  category20: 
+    label: 'Nourriture Basscourt'
+    categoryParent: '@category4'
+  
+  category13: 
+    label: 'Jouet pour Chien'
+    categoryParent: '@category0'
+  category14: 
+    label: 'Jouet pour Chat'
+    categoryParent: '@category1'
+  category15: 
+    label: 'Jouet pour Reptile'
+    categoryParent: '@category3'
+  category16: 
+    label: 'Jouet pour Oiseaux'
+    categoryParent: '@category2'
+  category17: 
+    label: 'Jouet pour Rongeur'
+    categoryParent: '@category5'
+  category18: 
+    label: 'Jouet pour Poisson'
+    categoryParent: '@category6'
+  category19:
+    label: 'Jouet Basscourt'
+    categoryParent: '@category4'
+  
+  

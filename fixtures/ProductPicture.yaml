@@ -1,0 +1,5 @@
+App\Entity\ProductPicture:
+  ProductPicture{0..5}:
+    libelle: '<word()>'
+    path: 'assets/img/<word()>'
+    product: '@product*'

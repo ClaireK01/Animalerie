@@ -1,0 +1,6 @@
+App\entity\Adress:
+  adress{1..14}:
+    streetNumber: '<numberBetween(1,150)>'
+    streetName: '<word()>'
+    city: '@city*'
+    users: '1x @user*'
