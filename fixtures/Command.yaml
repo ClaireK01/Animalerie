@@ -6,7 +6,7 @@ App\Entity\Command:
     numCommand (unique): '<numberBetween(1, 10000)>'
     createdAt: '<dateTimeBetween("-1000d days", "now")>'
     status: '<randomElement($statusArray)>'
-    totalPrice: '<numberBetween(10000)>'
+    totalPrice: '<numberBetween(0, 1000)>'
     user: '@user*'
     products: '<numberBetween(1,130)>x @product*'
     adress: '@adress*'
