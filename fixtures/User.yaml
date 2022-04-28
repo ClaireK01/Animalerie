@@ -1,5 +1,12 @@
 App\Entity\User:
-  user{0..500}:
+  user0:
+    email (unique): "<email()>"
+    roles: '["ROLE_ADMIN"]'
+    password: "<word()>"
+    firstName: "<firstName()>"
+    lastName: "<lastName()>"
+    createdAt: '<dateTimeBetween("-700 days", "now")>'
+  user{1..500}:
     email (unique): "<email()>"
     roles: '["ROLE_USER"]'
     password: "<word()>"
