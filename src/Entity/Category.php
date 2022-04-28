@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,24 +10,52 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[APIResource]
+#[APIResource(
+    normalizationContext: ["groups" => ["category"] ],
+    collectionOperations:['get', 'post'],
+    itemOperations:['get']
+    )]
 class Category
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(["category"])]
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["category", "product"])]
+    #[Assert\Length(
+        min:2,
+        max:50,
+        minMessage: 'Votre label est trop court',
+        maxMessage: 'Votre label est trop long'
+    ),
+    Assert\NotNull(
+        message: 'Merci de rentrer une valeur'
+    ),
+    Assert\NotBlank(
+        message: 'Votre champ est vide'
+    )]
     private $label;
+
+    ##########
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categories')]
     private $categoryParent;
 
+    ##########
+
     #[ORM\OneToMany(mappedBy: 'categoryParent', targetEntity: self::class)]
     private $categories;
 
+    ##########
+
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'categories')]
+    #[Groups(["category"])]
     private $products;
 
     public function __construct()

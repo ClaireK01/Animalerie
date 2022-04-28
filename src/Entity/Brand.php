@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BrandRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,21 +11,62 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BrandRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups'=>['brand']],
+    collectionOperations:['get', 'post'],
+    itemOperations:['get']
+    )]
 class Brand
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups('brand', "product")]
     private $id;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups('brand', "product")]
+    #[Assert\Length(
+        min:2,
+        max:50,
+        minMessage: 'Votre label est trop court',
+        maxMessage: 'Votre label est trop long'
+    ), 
+    Assert\NotNull(
+        message: 'Merci de rentrer une valeur'
+    ),
+    Assert\NotBlank(
+        message: 'Votre champ est vide'
+    ),
+    Assert\Type(
+        type: 'string',
+        message: 'Merci de rentrer une chaine de caractère'
+    )]
     private $label;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(
+        min:2,
+        max:50,
+        minMessage: 'Votre chemin est trop court',
+        maxMessage: 'Votre chemin est trop long'
+    ), 
+    Assert\NotNull(
+        message: 'Merci de rentrer une valeur'
+    ),
+    Assert\NotBlank(
+        message: 'Votre champ est vide'
+    )]
     private $imagePath;
 
+    ##########
+
     #[ORM\OneToMany(mappedBy: 'brand', targetEntity: Product::class)]
+    #[Groups('brand')]
     private $products;
 
     public function __construct()

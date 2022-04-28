@@ -47,6 +47,15 @@ class VisitedRepository extends ServiceEntityRepository
         }
     }
 
+    public function countAllVisits($dateMin, $dateMax){
+        return $this->createQueryBuilder('v')
+                ->where('v.visitedAt > :date_min')
+                ->andWhere('v.visitedAt < :date_max')
+                ->setParameter('date_min', $dateMin)
+                ->setParameter('date_max', $dateMax)
+                ->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Visited[] Returns an array of Visited objects
     //  */

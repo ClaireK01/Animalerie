@@ -47,6 +47,31 @@ class CommandRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllCommandByStatus($dateMin, $dateMax, $status1, $status2 = 0, $status3 = 0, $status4 = 0)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.status = :status_1 OR c.status = :status_2 OR c.status = :status_3 OR c.status = :status_4')
+            ->andWhere('c.createdAt > :date_min')
+            ->andWhere('c.createdAt < :date_max')
+            ->setParameter('status_1', $status1)
+            ->setParameter('status_2', $status2)
+            ->setParameter('status_3', $status3)
+            ->setParameter('status_4', $status4)
+            ->setParameter('date_min', $dateMin)
+            ->setParameter('date_max', $dateMax)
+            ->getQuery()->getResult();
+    }
+
+    ########### Left Join Exemple ######################
+    // public function test()
+    // {
+    //     return $this->createQueryBuilder('c')
+    //         ->innerJoin('c.user', 'u')
+    //         ->where('u.id = idNumber')
+    //         ->setParameter('idNumber', 3)
+    //         ->getQuery()->getResult();
+    // }
+
     // /**
     //  * @return Command[] Returns an array of Command objects
     //  */

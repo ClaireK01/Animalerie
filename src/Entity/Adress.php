@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AdressRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,28 +11,71 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdressRepository::class)]
-#[APIResource]
+#[APIResource( 
+    normalizationContext: ['groups'=>'adress'],
+    collectionOperations:['get', 'post'],
+    itemOperations:['get']
+    )]
 class Adress
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["adress", "city", "command", "user"])]
     private $id;
 
+    ##########
+
     #[ORM\Column(type: 'integer')]
+    #[Groups(["adress", "city", "command", "user"])]
+    #[Assert\NotBlank(
+        message: 'Merci de rentrer une valeur'
+    ),
+    Assert\NotNull(
+        message: 'Merci de rentrer une valeur'
+    ),
+    Assert\Type(
+        type: 'int',
+        message: 'Merci de rentrer un nombre'
+    )]
     private $streetNumber;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["adress", "city", "command", "user"])]
+    #[Assert\Length(
+        min:2,
+        max:8,
+        minMessage: 'Votre label est trop court',
+        maxMessage: 'Votre label est trop long'
+    ),
+    Assert\NotBlank(
+        message: 'Merci de rentrer une valeur'
+    ),
+    Assert\Type(
+        type: 'string',
+        message: 'Merci de rentrer une chaine de caractère'
+    )]
     private $streetName;
 
+    ##########
+
     #[ORM\OneToMany(mappedBy: 'adress', targetEntity: Command::class)]
+    #[Groups(["adress"])]
     private $commands;
 
+    ##########
+
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'addresses')]
+    #[Groups(["adress"])]
     private $users;
+
+    ##########
 
     #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'adresses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["adress"])]
     private $city;
 
     public function __construct()

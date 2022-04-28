@@ -64,6 +64,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function getAllUserByDate($dateMin, $dateMax)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.createdAt > :date_min')
+            ->andWhere('u.createdAt < :date_max')
+            ->setParameter('date_min', $dateMin)
+            ->setParameter('date_max', $dateMax)
+            ->getQuery()->getResult();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

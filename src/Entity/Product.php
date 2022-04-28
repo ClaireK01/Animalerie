@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,45 +11,129 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[APIResource]
+#[APIResource( 
+    normalizationContext: ['groups'=>['product']],
+    collectionOperations:['get', 'post'],
+    itemOperations:['get']
+    )]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(["category", "brand", "command", "productPicture"])]
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["category", "brand", "command", "product", "productPicture"])]
+    #[Assert\Length(
+        min:2,
+        max:15,
+        minMessage: 'Votre label est trop court',
+        maxMessage: 'Votre label est trop long'
+    ),
+    Assert\NotBlank(
+        message: 'Votre champ est vide'
+    ),
+    Assert\NotNull(
+        message: 'Merci de rentrer une valeur'
+    )]
     private $label;
 
+    ##########
+
     #[ORM\Column(type: 'text')]
+    #[Groups(["product"])]
+    #[Assert\Length(
+        min:5,
+        max:350,
+        minMessage: 'La description ne doit faire au moins 5 caractère',
+        maxMessage: 'La description ne doit pas dépasser 350 caractères'
+    ),
+    Assert\NotBlank(
+        message: 'Votre champ est vide'
+    ),
+    Assert\NotNull(
+        message: 'Merci de rentrer une valeur'
+    )]
     private $description;
 
+    ##########
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(["product"])]
+    #[Assert\Type(
+        type: 'boolean',
+        message: 'Merci de rentrer un boolen'
+    )]
     private $isActif;
 
+    ##########
+
     #[ORM\Column(type: 'integer')]
+    #[Groups(["product"])]
+    #[Assert\PositiveOrZero(
+        message: "Le stock ne peut pas être négatif"
+    ),
+    Assert\Type(
+        type: 'integer',
+        message: 'Merci de rentrer un nombre'
+    )]
     private $stock;
 
+    ##########
+    
     #[ORM\Column(type: 'integer')]
+    #[Groups(["product", "category"])]
+    #[Assert\NotNull(
+        message: 'Merci de rentrer une valeur'
+    ), 
+    Assert\Blank(
+        message: 'Votre champ est vide'
+    ),
+    Assert\PositiveOrZero(
+        message: "Le prix ne peut pas être négatif"
+    ), 
+    Assert\Type(
+        type: 'int',
+        message: 'Merci de rentrer un nombre'
+    )]
     private $price;
 
+    ##########
+
     #[ORM\ManyToMany(targetEntity: Command::class, mappedBy: 'products')]
+    #[Groups(["product"])]
     private $commands;
+
+    ##########
 
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["product"])]
     private $brand;
 
+    ##########
+
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Review::class)]
+    #[Groups(["product"])]
     private $reviews;
 
+    ##########
+
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'products')]
+    #[Groups(["product"])]
     private $categories;
 
+    ##########
+
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductPicture::class)]
+    #[Groups(["product"])]
     private $productPictures;
+
+    ##########
 
     public function __construct()
     {

@@ -2,43 +2,143 @@
 
 namespace App\Entity;
 
+use App\Controller\CommandController;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommandRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use App\Controller\CommandNumberController;
+use App\Controller\ConvertedBasketController;
+use App\Controller\PanierController;
 
 #[ORM\Entity(repositoryClass: CommandRepository::class)]
-#[APIResource]
+#[APIResource(
+    normalizationContext: ['groups' => ['command']],
+    collectionOperations: [
+        'get',
+        'post',
+        'CountCommand' => [
+            'method' => 'GET',
+            'path' => '/commands/total_commands',
+            'controller' => CommandController::class
+        ],
+        'CountPanier' => [
+            'method' => 'GET',
+            'path' => 'commands/total_paniers',
+            'controller' => PanierController::class
+        ],
+        'CountCommandNumber' => [
+            'method' => 'GET',
+            'path' => '/commands/total_number_commands',
+            'controller' => CommandNumberController::class
+        ],
+        'CountConvertedBasket' => [
+            'method' => 'GET',
+            'path' => '/commands/converted_baskets',
+            'controller' => ConvertedBasketController::class
+        ],
+    ],
+    itemOperations: ['get']
+)]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
 class Command
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["adress", "command", "product", "user"])]
     private $id;
 
+    ##########
+
     #[ORM\Column(type: 'integer')]
+    #[Groups(["adress", "command", "product", "user"])]
+    #[
+        Assert\NotNull(
+            message: 'Merci de rentrer une valeur'
+        ),
+        Assert\NotBlank(
+            message: 'Votre champ est vide'
+        )
+    ]
     private $numCommand;
 
+    ##########
+
     #[ORM\Column(type: 'datetime')]
+    #[Groups(["command"])]
+    #[
+        Assert\Type(
+            type: "datetime",
+            message: "Merci de rentrer un format de date valide."
+        ),
+        Assert\GreaterThan(
+            value: 'today',
+            message: 'Merci de rentrer une date valide.'
+        ),
+        Assert\NotNull(
+            message: "Merci de rentrer une valeur."
+        ),
+        Assert\NotBlank(
+            message: 'Votre champ est vide.'
+        )
+    ]
     private $createdAt;
 
-    #[ORM\Column(type: 'integer')]
-    private $status;
+    ##########
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(["adress", "command", "product"])]
+
+    private $status;
+
+    ##########
+
+    #[ORM\Column(type: 'integer')]
+    #[Groups(["command"])]
+    #[
+        Assert\NotNull(
+            message: 'Merci de rentrer une valeur'
+        ),
+        Assert\NotBlank(
+            message: 'Votre champ est vide'
+        ),
+        Assert\PositiveOrZero(
+            message: "Le prix total ne peut pas être négatif"
+        ),
+        Assert\Type(
+            type: 'integer',
+            message: 'Merci de rentrer un nombre'
+        )
+    ]
     private $totalPrice;
+
+    ##########
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commands')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["command"])]
     private $user;
 
+    ##########
+
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'commands')]
+    #[Groups(["command"])]
     private $products;
+
+    ##########
 
     #[ORM\ManyToOne(targetEntity: Adress::class, inversedBy: 'commands')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["command"])]
     private $adress;
+
+    ##########
 
     public function __construct()
     {

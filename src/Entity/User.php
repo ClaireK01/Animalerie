@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\TotalRecurrenceUserController;
+use App\Controller\TotalUserController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,40 +15,143 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[APIResource]
+#[APIResource(
+    normalizationContext: ['groups' => ['user']],
+    collectionOperations: [
+        'get',
+        'post',
+        'CountNewUser' => [
+            'method' => 'GET',
+            'path' => 'users/total_new_users',
+            'controller' => TotalUserController::class
+        ],
+        'CountUserRecurrence' => [
+            'method' => 'GET',
+            'path' => 'users/count_user_recurrence',
+            'controller' => TotalRecurrenceUserController::class
+        ]
+    ],
+    itemOperations: ['get']
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["adress", "command", "review", "user"])]
     private $id;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(["adress", "command", "review", "user"])]
+    #[
+        Assert\Email(
+            message: 'Merci de rentrer un email valide'
+        ),
+        Assert\NotNull(
+            message: "Merci de rentrer une valeur."
+        ),
+        Assert\NotBlank(
+            message: 'Votre champ est vide.'
+        )
+    ]
     private $email;
 
+    ###########
+
     #[ORM\Column(type: 'json')]
+    #[Groups(["user"])]
     private $roles = [];
 
+    ##########
+
     #[ORM\Column(type: 'string')]
+    #[Assert\Length(
+        min: 2,
+        max: 15,
+        minMessage: 'Votre mot de passe est trop court',
+        maxMessage: 'Votre mot de passe est trop long'
+    )]
     private $password;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["user"])]
+    #[
+        Assert\Type(
+            type: 'string',
+            message: 'Merci de rentrer une chaine de caractère'
+        ),
+        Assert\NotNull(
+            message: "Merci de rentrer une valeur."
+        ),
+        Assert\NotBlank(
+            message: 'Votre champ est vide.'
+        )
+    ]
     private $firstName;
 
+    ##########
+
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["user"])]
+    #[
+        Assert\Type(
+            type: 'string',
+            message: 'Merci de rentrer une chaine de caractère'
+        ),
+        Assert\NotNull(
+            message: "Merci de rentrer une valeur."
+        ),
+        Assert\NotBlank(
+            message: 'Votre champ est vide.'
+        )
+    ]
     private $lastName;
 
+    ##########
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Command::class)]
+    #[Groups(["user"])]
     private $commands;
 
+    ##########
+
     #[ORM\ManyToMany(targetEntity: Adress::class, inversedBy: 'users')]
+    #[Groups(["user"])]
     private $addresses;
 
+    ##########
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
+    #[Groups(["user"])]
     private $Review;
 
+    ##########
+
     #[ORM\Column(type: 'datetime')]
+    #[Groups(["user"])]
+    #[
+        Assert\Type(
+            type: 'datetime',
+            message: 'Merci de rentrer un format de date valide'
+        ),
+        Assert\GreaterThan(
+            value: 'today',
+            message: 'Merci de rentrer une date valide.'
+        ),
+        Assert\NotNull(
+            message: "Merci de rentrer une valeur."
+        ),
+        Assert\NotBlank(
+            message: 'Votre champ est vide.'
+        )
+    ]
     private $createdAt;
+
+    ##########
 
     public function __construct()
     {
