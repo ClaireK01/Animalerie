@@ -1,15 +1,15 @@
 App\Entity\User:
   user0:
-    email (unique): "<email()>"
+    email (unique): "claire@gmail.com"
     roles: '["ROLE_ADMIN"]'
-    password: "<word()>"
+    password: "\\$2y\\$13\\$RctwHEIYgl8FhYm5czbCUO3r0at/79/.3SE9Bv03zFFKWr0CSKePO"
     firstName: "<firstName()>"
     lastName: "<lastName()>"
     createdAt: '<dateTimeBetween("-700 days", "now")>'
   user{1..500}:
     email (unique): "<email()>"
     roles: '["ROLE_USER"]'
-    password: "<word()>"
+    password: "\\$2y\\$13\\$RctwHEIYgl8FhYm5czbCUO3r0at/79/.3SE9Bv03zFFKWr0CSKePO"
     firstName: "<firstName()>"
     lastName: "<lastName()>"
     createdAt: '<dateTimeBetween("-700 days", "now")>'

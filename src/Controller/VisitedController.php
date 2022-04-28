@@ -13,7 +13,8 @@ class VisitedController extends AbstractController
 {
     private VisitedRepository $visitedRepository;
 
-    public function __construct(VisitedRepository $visitedRepository){
+    public function __construct(VisitedRepository $visitedRepository)
+    {
         $this->visitedRepository = $visitedRepository;
     }
 
@@ -32,6 +33,7 @@ class VisitedController extends AbstractController
 
         $visitEntities = $this->visitedRepository->countAllVisits($minDate, $maxDate);
         dump($visitEntities);
+        dump($this->getUser());
 
         return count($visitEntities);
     }

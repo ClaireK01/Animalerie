@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use App\Controller\CommandNumberController;
 use App\Controller\ConvertedBasketController;
+use App\Controller\ConvertedCommandController;
 use App\Controller\PanierController;
 
 #[ORM\Entity(repositoryClass: CommandRepository::class)]
@@ -42,6 +43,11 @@ use App\Controller\PanierController;
             'path' => '/commands/converted_baskets',
             'controller' => ConvertedBasketController::class
         ],
+        'CountConvertedCommand' => [
+            'method' => 'GET',
+            'path' => '/commands/converted_commands',
+            'controller' => ConvertedCommandController::class
+        ]
     ],
     itemOperations: ['get']
 )]
