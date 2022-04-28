@@ -16,6 +16,7 @@ use App\Controller\CommandNumberController;
 use App\Controller\ConvertedBasketController;
 use App\Controller\ConvertedCommandController;
 use App\Controller\PanierController;
+use App\Controller\TotalRecurrenceUserController;
 
 #[ORM\Entity(repositoryClass: CommandRepository::class)]
 #[APIResource(
@@ -47,6 +48,11 @@ use App\Controller\PanierController;
             'method' => 'GET',
             'path' => '/commands/converted_commands',
             'controller' => ConvertedCommandController::class
+        ],
+        'TotalRecurrenceCommand' => [
+            'method' => 'GET',
+            'path' => '/commands/recurence_commands',
+            'controller' => TotalRecurrenceUserController::class
         ]
     ],
     itemOperations: ['get']

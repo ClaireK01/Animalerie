@@ -12,4 +12,4 @@ App\Entity\User:
     password: "\\$2y\\$13\\$RctwHEIYgl8FhYm5czbCUO3r0at/79/.3SE9Bv03zFFKWr0CSKePO"
     firstName: "<firstName()>"
     lastName: "<lastName()>"
-    createdAt: '<dateTimeBetween("-700 days", "now")>'
+    createdAt: '<dateTimeBetween("-1200 days", "now")>'
