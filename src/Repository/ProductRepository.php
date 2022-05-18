@@ -47,6 +47,54 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
+    public function getLastProduct(){
+        return $this->createQueryBuilder('p')
+                    ->where('p.isActif = 1')
+                    ->orderBy('p.id', 'DESC')
+                    ->setMaxResults(6)
+                    ->getQuery()->getResult();
+    }
+
+    public function getCheapestProduct(){
+        return $this->createQueryBuilder('p')
+                    ->where('p.isActif = 1')
+                    ->orderBy('p.price', 'ASC')
+                    ->setMaxResults(6)
+                    ->getQuery()->getResult();
+    }
+
+    public function getBestSells(){
+        return $this->createQueryBuilder('p')
+                    ->select('p, COUNT(c) as counted')
+                    ->join('p.commands', 'c')
+                    ->where('c.status = 200 OR c.status = 300')
+                    ->orderBy('counted', 'DESC')
+                    ->groupBy('p.id')
+                    ->setMaxResults(6)
+                    ->getQuery()->getResult();
+    }
+
+    public function getSameBrandProducts($brand){
+        return $this->createQueryBuilder('p')
+                ->where('p.brand = :brand')
+                ->setParameter('brand', $brand)
+                ->setMaxResults(6)
+                ->getQuery()->getResult();
+    }
+
+    public function getSimilarProducts($label, $categories){
+        return $this->createQueryBuilder('p')
+                    ->join('p.categories', 'c')
+                    ->where('p.label LIKE :label OR c IN (:categories)')
+                    ->setParameter('label', '%'.$label.'%')
+                    ->setParameter('categories', $categories)
+                    ->setMaxResults(6)
+                    ->getQuery()->getResult();
+    }
+
+    
+
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

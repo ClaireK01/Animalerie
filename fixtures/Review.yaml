@@ -1,5 +1,5 @@
 App\Entity\Review:
-  review{1..10}:
+  review{1..600}:
     note: '<numberBetween(1,5)>'
     createdAt: '<dateTimeBetween("-1000 days", "now")>'
     content: '<sentence(30)>'

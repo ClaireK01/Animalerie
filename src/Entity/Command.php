@@ -70,14 +70,14 @@ class Command
 
     #[ORM\Column(type: 'integer')]
     #[Groups(["adress", "command", "product", "user"])]
-    #[
-        Assert\NotNull(
-            message: 'Merci de rentrer une valeur'
-        ),
-        Assert\NotBlank(
-            message: 'Votre champ est vide'
-        )
-    ]
+    // #[
+    //     Assert\NotNull(
+    //         message: 'Merci de rentrer une valeur'
+    //     ),
+    //     Assert\NotBlank(
+    //         message: 'Votre champ est vide'
+    //     )
+    // ]
     private $numCommand;
 
     ##########

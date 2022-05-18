@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<title>Hello LostPasswordController!</title>
+
+{% block body %}
+
+    <div class="container">
+        {{form_start(form)}}
+            {{form_row(form.email)}}
+            <button class="btn btn-primary">Valider</button>
+        {{form_end(form)}}
+    </div>
+
+{% endblock %}

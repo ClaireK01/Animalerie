@@ -47,6 +47,15 @@ class ReviewRepository extends ServiceEntityRepository
         }
     }
 
+    public function getReviewsByProducts($product){
+        return $this->createQueryBuilder('r')
+                    ->where('r.product = :product')
+                    ->setParameter('product', $product)
+                    ->orderBy('r.createdAt', 'DESC')
+                    ->setMaxResults(6)
+                    ->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Review[] Returns an array of Review objects
     //  */

@@ -89,9 +89,6 @@ class Product
     #[Groups(["product", "category"])]
     #[Assert\NotNull(
         message: 'Merci de rentrer une valeur'
-    ), 
-    Assert\Blank(
-        message: 'Votre champ est vide'
     ),
     Assert\PositiveOrZero(
         message: "Le prix ne peut pas être négatif"
@@ -129,7 +126,7 @@ class Product
 
     ##########
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductPicture::class)]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductPicture::class, cascade:['persist', 'remove'])]
     #[Groups(["product"])]
     private $productPictures;
 

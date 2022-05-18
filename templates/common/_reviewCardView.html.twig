@@ -1,0 +1,12 @@
+<div class="reviewContainer my-3 py-2 px-3 d-flex justify-content-between ">
+    <div class="mx-4">
+        <p>{{review.user.firstName}}</p>
+    </div>
+    <div>
+        <p>{{review.note}}/5</p>
+        <p>{{review.content}}</p>
+    </div>
+</div>
+{% if loop.index != reviews|length %}
+<hr>
+{% endif %}

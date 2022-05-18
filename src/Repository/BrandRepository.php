@@ -47,6 +47,18 @@ class BrandRepository extends ServiceEntityRepository
         }
     }
 
+    public function getMostPopularBrands(){
+        return $this->createQueryBuilder('b')
+                    ->select('b', 'COUNT(c) as counted')
+                    ->join('b.products', 'p')
+                    ->join('p.commands', 'c')
+                    ->where('c.status = 200 or c.status = 300')
+                    ->orderBy('counted', 'DESC')
+                    ->groupBy('b.id')
+                    ->setMaxResults(4)
+                    ->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Brand[] Returns an array of Brand objects
     //  */

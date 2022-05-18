@@ -103,6 +103,25 @@ class CommandRepository extends ServiceEntityRepository
             ->getQuery()->getResult();
     }
 
+
+    public function getBestSells(){
+        return $this->createQueryBuilder('c')
+                    ->select('COUNT products as "counted"')
+                    ->join('c.products', 'p')
+                    ->where('c.status = 200 OR c.status = 300')
+                    ->orderBy('counted', 'DESC')
+                    ->setMaxResults(5)
+                    ->getQuery()->getResult();
+    }
+
+    public function getBasketUser($user){
+        return $this->createQueryBuilder('c')
+                    ->where('c.user = :user')
+                    ->andWhere('c.status = 100')
+                    ->setParameter('user', $user)
+                    ->getQuery()->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Command[] Returns an array of Command objects
     //  */
