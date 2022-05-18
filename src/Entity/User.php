@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -33,6 +34,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
     ],
     itemOperations: ['get']
 )]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -133,23 +135,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'datetime')]
     #[Groups(["user"])]
-    #[
-        Assert\Type(
-            type: 'datetime',
-            message: 'Merci de rentrer un format de date valide'
-        ),
-        Assert\GreaterThan(
-            value: 'today',
-            message: 'Merci de rentrer une date valide.'
-        ),
-        Assert\NotNull(
-            message: "Merci de rentrer une valeur."
-        ),
-        Assert\NotBlank(
-            message: 'Votre champ est vide.'
-        )
-    ]
+    // #[
+    //     Assert\Type(
+    //         type: 'datetime',
+    //         message: 'Merci de rentrer un format de date valide'
+    //     ),
+    //     Assert\GreaterThan(
+    //         value: 'today',
+    //         message: 'Merci de rentrer une date valide.'
+    //     ),
+    //     Assert\NotNull(
+    //         message: "Merci de rentrer une valeur."
+    //     ),
+    //     Assert\NotBlank(
+    //         message: 'Votre champ est vide.'
+    //     )
+    // ]
     private $createdAt;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPassword::class)]
+    private $resetPasswords;
 
     ##########
 
@@ -158,6 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->commands = new ArrayCollection();
         $this->addresses = new ArrayCollection();
         $this->Review = new ArrayCollection();
+        $this->resetPasswords = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -351,6 +357,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ResetPassword>
+     */
+    public function getResetPasswords(): Collection
+    {
+        return $this->resetPasswords;
+    }
+
+    public function addResetPassword(ResetPassword $resetPassword): self
+    {
+        if (!$this->resetPasswords->contains($resetPassword)) {
+            $this->resetPasswords[] = $resetPassword;
+            $resetPassword->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResetPassword(ResetPassword $resetPassword): self
+    {
+        if ($this->resetPasswords->removeElement($resetPassword)) {
+            // set the owning side to null (unless already changed)
+            if ($resetPassword->getUser() === $this) {
+                $resetPassword->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -1,3 +1,6 @@
+#MDP : testtest
+#hash8 : $2y$13$91WRpFTI8l789BB.GZnCi./xsDvIqUJztDN6MwsdgwzM1G6skM.CG
+
 App\Entity\User:
   user0:
     email (unique): "claire@gmail.com"

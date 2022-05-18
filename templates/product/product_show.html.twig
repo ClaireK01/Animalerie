@@ -1,0 +1,56 @@
+{% extends 'base-front.html.twig' %}
+
+{% block body %}
+
+<div class="container my-5">
+
+    <div class="productSectionTop w-100 d-flex justify-content-around">
+        <div class="imageProductContainer">
+            <img src="{{asset('build/images/default-placeholder.png')}}">
+        </div>
+        <div class="DetailProductContainer w-50">
+            <h1>{{product.label}}</h1>
+            <p>{{product.brand.label}}<p>
+            <p> Moyenne : {{averageNote}}/5</p>
+            <p><span>{{product.price / 100 }} €</span></p>
+            <p class="my-4">Description : {{product.description}}</p>
+            <form>
+            <input class="me-4 inputQuantity" type="number" value="1">
+            <a href="#" class="btn btn-success"><i class="fa-solid fa-cart-plus"></i> Ajouter au panier </a>
+            </form>
+        </div>
+    </div>
+
+    <div class="similarProducts">
+        <h3 class="my-5">Produits Simlaires:</h3>
+        <div class="row">
+                {% for product in similarProducts %}
+                    <div class="col-2">
+                        {% include 'common/_productCardView.html.twig' %}
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+
+     <div class="sameBrandProducts">
+        <h3 class="my-5">De la même marque :</h3>
+        <div class="row">
+                {% for product in sameBrandProducts %}
+                    <div class="col-2">
+                        {% include 'common/_productCardView.html.twig' %}
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+
+    <div class="reviews my-5">
+    <h3 class="my-5">Les Avis:</h3>
+        {% for review in reviews %}
+            {% include 'common/_reviewCardView.html.twig' %}
+        {% endfor %}
+    </div>
+
+
+</div>
+
+{% endblock %}

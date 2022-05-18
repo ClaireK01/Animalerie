@@ -1,0 +1,15 @@
+<a href="{{path('app_product_show', {id:product.id})}}">
+    <div class="productCardView text-center">
+        <div class="productImage">
+            <img src="{{asset('build/images/default-placeholder.png')}}" alt="image produit">
+        </div>
+        <div class="productDetail">
+            <h6 class="mb-0  mt-2">{{product.label}}</h6>
+            {{product.brand.label}}<br>
+            <strong>{{product.price / 100}}€</strong><br>
+            <i class="fa-solid fa-cart-plus"></i>
+            <i class="fa-regular fa-heart"></i></i>
+            
+        </div>
+    </div>
+</a>
